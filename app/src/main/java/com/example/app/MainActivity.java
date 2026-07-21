@@ -7,7 +7,10 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
+import android.webkit.WebChromeClient;
+import android.webkit.PermissionRequest;
+import android.Manifest;
+import android.content.pm.PackageManager
 
 public class MainActivity extends Activity {
 
@@ -26,6 +29,22 @@ public class MainActivity extends Activity {
         // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+webSettings.setAllowFileAccess(true);
+webSettings.setAllowContentAccess(true);
+webSettings.setMediaPlaybackRequiresUserGesture(false);
+
+mWebView.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public void onPermissionRequest(final PermissionRequest request) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                request.grant(request.getResources());
+            }
+        });
+    }
+});
 
         // Use remote resource
 mWebView.loadUrl("https://samrat-chat.onrender.com");
