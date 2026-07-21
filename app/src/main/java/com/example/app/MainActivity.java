@@ -47,10 +47,10 @@ mWebView.setWebChromeClient(new WebChromeClient() {
 });
 
         // Use remote resource
-mWebView.loadUrl("https://samrat-chat.onrender.com");
+mWebView.setWebViewClient(new WebViewClient());
 
         // Stop local links and redirects from opening in browser instead of WebView
-        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.loadUrl("https://samrat-chat.onrender.com");
 
         // Use local resource
         // mWebView.loadUrl("file:///android_asset/www/index.html");
