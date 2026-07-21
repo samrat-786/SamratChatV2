@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
 import android.webkit.PermissionRequest;
 import android.Manifest;
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager;
 
 public class MainActivity extends Activity {
 
