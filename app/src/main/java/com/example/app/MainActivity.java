@@ -37,7 +37,8 @@ private static final int FILE_CHOOSER_REQUEST_CODE = 100;
 webSettings.setAllowFileAccess(true);
 webSettings.setAllowContentAccess(true);
 webSettings.setMediaPlaybackRequiresUserGesture(false);
-
+webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+webSettings.setSupportMultipleWindows(true);
 mWebView.setWebChromeClient(new WebChromeClient() {@Override
 public boolean onShowFileChooser(
         WebView webView,
