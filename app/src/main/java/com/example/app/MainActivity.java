@@ -102,5 +102,21 @@ mWebView.setWebViewClient(new WebViewClient());
         }
 
         return super.onOptionsItemSelected(item);
+    }@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == FILE_CHOOSER_REQUEST_CODE) {
+        if (filePathCallback == null) return;
+
+        Uri[] results = null;
+
+        if (resultCode == RESULT_OK && data != null) {
+            results = new Uri[]{data.getData()};
+        }
+
+        filePathCallback.onReceiveValue(results);
+        filePathCallback = null;
     }
 }
+}                            
