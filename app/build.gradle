@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
 namespace "com.example.app"
-    compileSdkVersion 21
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 34
+    
 
     defaultConfig {
         applicationId "com.example.helloworld"
-        minSdkVersion 15
-        targetSdkVersion 15
+        minSdkVersion 21
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
     }
