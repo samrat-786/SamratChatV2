@@ -11,8 +11,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.PermissionRequest;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.net.Uri;
 import android.webkit.ValueCallback;
@@ -26,16 +24,6 @@ private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (ContextCompat.checkSelfPermission(this,
-        Manifest.permission.RECORD_AUDIO)
-        != PackageManager.PERMISSION_GRANTED) {
-
-    ActivityCompat.requestPermissions(
-            this,
-            new String[]{Manifest.permission.RECORD_AUDIO},
-            1
-    );
-}
 
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
 
