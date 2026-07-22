@@ -11,9 +11,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.PermissionRequest;
 import android.Manifest;
 import android.content.pm.PackageManager;
-
+import android.content.Intent;
+import android.net.Uri;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient.FileChooserParams;
 public class MainActivity extends Activity {
-
+private ValueCallback<Uri[]> filePathCallback;
+private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     private WebView mWebView;
 
     @Override
@@ -34,7 +38,19 @@ webSettings.setAllowFileAccess(true);
 webSettings.setAllowContentAccess(true);
 webSettings.setMediaPlaybackRequiresUserGesture(false);
 
-mWebView.setWebChromeClient(new WebChromeClient() {
+mWebView.setWebChromeClient(new WebChromeClient() {@Override
+public boolean onShowFileChooser(
+        WebView webView,
+        ValueCallback<Uri[]> filePathCallback,
+        FileChooserParams fileChooserParams) {
+
+    MainActivity.this.filePathCallback = filePathCallback;
+
+    Intent intent = fileChooserParams.createIntent();
+    startActivityForResult(intent, FILE_CHOOSER_REQUEST_CODE);
+
+    return true;
+}
     @Override
     public void onPermissionRequest(final PermissionRequest request) {
         runOnUiThread(new Runnable() {
