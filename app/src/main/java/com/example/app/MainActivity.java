@@ -30,8 +30,10 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             != PackageManager.PERMISSION_GRANTED) {
 
         requestPermissions(
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                1
+                new String[]{
+    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.CAMERA
+}
         );
     }
 }
@@ -77,15 +79,11 @@ public void onPermissionRequest(final PermissionRequest request) {
     runOnUiThread(new Runnable() {
         @Override
         public void run() {
-            request.grant(new String[]{
-                PermissionRequest.RESOURCE_AUDIO_CAPTURE
-            });
+            request.grant(request.getResources());
         }
     });
 }
-
 });
-
         // Use remote resource
 mWebView.setWebViewClient(new WebViewClient());
 
