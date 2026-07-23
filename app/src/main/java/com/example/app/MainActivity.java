@@ -21,18 +21,22 @@ public class MainActivity extends Activity {
 private ValueCallback<Uri[]> filePathCallback;
 private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     private WebView mWebView;
-@Override
-public void onPermissionRequest(final PermissionRequest request) {
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            request.grant(new String[]{
-                PermissionRequest.RESOURCE_AUDIO_CAPTURE
-            });
-        }
-    });
+    @Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+    if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED) {
+
+        requestPermissions(
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                1
+        );
+    }
 }
-        mWebView = (WebView) findViewById(R.id.activity_main_webview);
+    mWebView = (WebView) findViewById(R.id.activity_main_webview);
+    
 
         // Force links and redirects to open in the WebView instead of in a browser
        
@@ -122,6 +126,7 @@ mWebView.setWebViewClient(new WebViewClient());
         }
 
         return super.onOptionsItemSelected(item);
+}
     @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -139,4 +144,4 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         filePathCallback = null;
     }
 }
-}                            
+}                      
