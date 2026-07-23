@@ -52,7 +52,9 @@ webSettings.setAllowContentAccess(true);
 webSettings.setMediaPlaybackRequiresUserGesture(false);
 webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 webSettings.setSupportMultipleWindows(true);
-mWebView.setWebChromeClient(new WebChromeClient() {@Override
+mWebView.setWebChromeClient(new WebChromeClient() {
+
+@Override
 public boolean onShowFileChooser(
         WebView webView,
         ValueCallback<Uri[]> filePathCallback,
@@ -65,15 +67,19 @@ public boolean onShowFileChooser(
 
     return true;
 }
-    @Override
-    public void onPermissionRequest(final PermissionRequest request) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                request.grant(request.getResources());
-            }
-        });
-    }
+
+@Override
+public void onPermissionRequest(final PermissionRequest request) {
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            request.grant(new String[]{
+                PermissionRequest.RESOURCE_AUDIO_CAPTURE
+            });
+        }
+    });
+}
+
 });
 
         // Use remote resource
