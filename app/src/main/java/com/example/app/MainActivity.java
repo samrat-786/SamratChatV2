@@ -39,7 +39,9 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
     }
 }
     mWebView = (WebView) findViewById(R.id.activity_main_webview);
-    
+    mWebView.getSettings().setUserAgentString(
+    mWebView.getSettings().getUserAgentString() + " Chrome"
+);
 
         // Force links and redirects to open in the WebView instead of in a browser
        
