@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.FileChooserParams;
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
 public class MainActivity extends Activity {
 private ValueCallback<Uri[]> filePathCallback;
 private static final int FILE_CHOOSER_REQUEST_CODE = 100;
@@ -34,6 +36,12 @@ private static final int FILE_CHOOSER_REQUEST_CODE = 100;
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+    WebSettingsCompat.setForceDark(
+        webSettings,
+        WebSettingsCompat.FORCE_DARK_OFF
+    );
+}
 webSettings.setAllowFileAccess(true);
 webSettings.setAllowContentAccess(true);
 webSettings.setMediaPlaybackRequiresUserGesture(false);
