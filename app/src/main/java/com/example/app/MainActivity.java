@@ -26,7 +26,14 @@ private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
+        != PackageManager.PERMISSION_GRANTED) {
 
+    requestPermissions(
+            new String[]{android.Manifest.permission.RECORD_AUDIO},
+            1
+    );
+}
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
 
         // Force links and redirects to open in the WebView instead of in a browser
