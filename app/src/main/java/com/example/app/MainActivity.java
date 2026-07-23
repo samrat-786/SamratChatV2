@@ -29,12 +29,13 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
     if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED) {
 
-        requestPermissions(
-                new String[]{
-    Manifest.permission.RECORD_AUDIO,
-    Manifest.permission.CAMERA
-}
-        );
+    requestPermissions(
+    new String[]{
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.CAMERA
+    },
+    1
+);
     }
 }
     mWebView = (WebView) findViewById(R.id.activity_main_webview);
