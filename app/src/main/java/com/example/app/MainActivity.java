@@ -21,18 +21,16 @@ public class MainActivity extends Activity {
 private ValueCallback<Uri[]> filePathCallback;
 private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     private WebView mWebView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
-        != PackageManager.PERMISSION_GRANTED) {
-
-    requestPermissions(
-            new String[]{android.Manifest.permission.RECORD_AUDIO},
-            1
-    );
+@Override
+public void onPermissionRequest(final PermissionRequest request) {
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            request.grant(new String[]{
+                PermissionRequest.RESOURCE_AUDIO_CAPTURE
+            });
+        }
+    });
 }
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
 
