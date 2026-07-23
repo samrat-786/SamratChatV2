@@ -22,4 +22,5 @@ namespace "com.example.app"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.webkit:webkit:1.12.1'
 }
