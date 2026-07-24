@@ -79,14 +79,18 @@ public boolean onShowFileChooser(
 
 @Override
 public void onPermissionRequest(final PermissionRequest request) {
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            request.grant(request.getResources());
-        }
-    });
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                request.grant(new String[]{
+                    PermissionRequest.RESOURCE_AUDIO_CAPTURE,
+                    PermissionRequest.RESOURCE_VIDEO_CAPTURE
+                });
+            }
+        });
+    }
 }
-});
         // Use remote resource
 mWebView.setWebViewClient(new WebViewClient());
 
