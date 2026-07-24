@@ -10,6 +10,10 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
+ImageView logo = findViewById(R.id.logo);
+
+Animation fade = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+logo.startAnimation(fade);
 
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
