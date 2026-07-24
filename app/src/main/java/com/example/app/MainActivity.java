@@ -91,7 +91,8 @@ public void onPermissionRequest(final PermissionRequest request) {
         });
     }
 }
-        // Use remote resource
+    });
+    // Use remote resource
 mWebView.setWebViewClient(new WebViewClient());
 
         // Stop local links and redirects from opening in browser instead of WebView
