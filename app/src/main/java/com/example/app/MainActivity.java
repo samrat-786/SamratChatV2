@@ -21,7 +21,6 @@ public class MainActivity extends Activity {
 private ValueCallback<Uri[]> filePathCallback;
 private static final int FILE_CHOOSER_REQUEST_CODE = 100;
     private WebView mWebView;
-private android.widget.ProgressBar loading;
     @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,8 +39,6 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
     }
 }
     mWebView = (WebView) findViewById(R.id.activity_main_webview);
-loading = findViewById(R.id.loading);
-loading.setVisibility(android.view.View.VISIBLE);
     mWebView.getSettings().setUserAgentString(
     mWebView.getSettings().getUserAgentString() + " Chrome"
 );
@@ -100,7 +97,6 @@ mWebView.setWebViewClient(new WebViewClient() {
 
     @Override
     public void onPageFinished(WebView view, String url) {
-        loading.setVisibility(android.view.View.GONE);
     }
 });
 
