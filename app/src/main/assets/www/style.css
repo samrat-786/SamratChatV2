@@ -81,3 +81,40 @@ online-dot {
   border-radius: 50%;
   margin-right: 6px;
 }
+#messages {
+  list-style: none;
+  padding: 10px;
+}
+
+#messages li {
+  display: flex;
+  margin: 8px 0;
+}
+
+.my-message {
+  justify-content: flex-end;
+}
+
+.other-message {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: #dcf8c6;
+  color: #000;
+}
+
+.other-message .bubble {
+  background: #ffffff;
+  border: 1px solid #ddd;
+}
+
+.time {
+  font-size: 11px;
+  color: #666;
+  text-align: right;
+  margin-top: 4px;
+}
