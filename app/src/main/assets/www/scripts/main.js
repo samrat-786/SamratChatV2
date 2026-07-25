@@ -1,83 +1,280 @@
-/*!
- *
- *  Web Starter Kit
- *  Copyright 2015 Google Inc. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License
- *
- */
-/* eslint-env browser */
-(function() {
-  'use strict';
+const socket = io();
 
-  // Check to make sure service workers are supported in the current browser,
-  // and that the current page is accessed from a secure origin. Using a
-  // service worker from an insecure origin will trigger JS console errors. See
-  // http://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
-  var isLocalhost = Boolean(window.location.hostname === 'localhost' ||
-      // [::1] is the IPv6 localhost address.
-      window.location.hostname === '[::1]' ||
-      // 127.0.0.1/8 is considered localhost for IPv4.
-      window.location.hostname.match(
-        /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-      )
-    );
+let username = "";
+let selectedImage = "";
 
-  if ('serviceWorker' in navigator &&
-      (window.location.protocol === 'https:' || isLocalhost)) {
-    navigator.serviceWorker.register('service-worker.js')
-    .then(function(registration) {
-      // Check to see if there's an updated version of service-worker.js with
-      // new files to cache:
-      // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-update-method
-      if (typeof registration.update === 'function') {
-        registration.update();
-      }
+const loginBtn = document.getElementById("loginBtn");
+const usernameInput = document.getElementById("username");
+const login = document.getElementById("login");
+const chat = document.getElementById("chat");
 
-      // updatefound is fired if service-worker.js changes.
-      registration.onupdatefound = function() {
-        // updatefound is also fired the very first time the SW is installed,
-        // and there's no need to prompt for a reload at that point.
-        // So check here to see if the page is already controlled,
-        // i.e. whether there's an existing service worker.
-        if (navigator.serviceWorker.controller) {
-          // The updatefound event implies that registration.installing is set:
-          // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-container-updatefound-event
-          var installingWorker = registration.installing;
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const messages = document.getElementById("messages");
+const userList = document.getElementById("userList");
 
-          installingWorker.onstatechange = function() {
-            switch (installingWorker.state) {
-              case 'installed':
-                // At this point, the old content will have been purged and the
-                // fresh content will have been added to the cache.
-                // It's the perfect time to display a "New content is
-                // available; please refresh." message in the page's interface.
-                break;
+const photoBtn = document.getElementById("photoBtn");
+const imageInput = document.getElementById("imageInput");
+const voiceBtn = document.getElementById("voiceBtn");
 
-              case 'redundant':
-                throw new Error('The installing ' +
-                                'service worker became redundant.');
+const imagePreview = document.getElementById("imagePreview");
+const sendImageBtn = document.getElementById("sendImageBtn");
+loginBtn.onclick = () => {
+  username = usernameInput.value.trim();
 
-              default:
-                // Ignore
-            }
-          };
-        }
-      };
-    }).catch(function(e) {
-      console.error('Error during service worker registration:', e);
-    });
+  if (!username) {
+    alert("Enter your name");
+    return;
   }
 
-  // Your custom JavaScript goes here
-})();
+  localStorage.setItem("username", username);
+
+  socket.emit("join", username);
+
+  login.style.display = "none";
+  chat.style.display = "block";
+};
+
+window.onload = () => {
+  const savedName = localStorage.getItem("username");
+
+  if (savedName) {
+    username = savedName;
+    socket.emit("join", username);
+    login.style.display = "none";
+    chat.style.display = "block";
+  }
+};
+// User List
+socket.on("userList", (users) => {
+  userList.innerHTML = '<option value="">🌍 Everyone</option>';
+
+  users.forEach((user) => {
+    if (user !== username) {
+      const option = document.createElement("option");
+      option.value = user;
+      option.textContent = "🟢 " + user;
+      userList.appendChild(option);
+    }
+  });
+
+});
+
+socket.on("old messages", (oldMessages) => {
+  oldMessages.forEach((data) => {
+    const li = document.createElement("li");
+if (data.from === username) {
+  li.className = "my-message";
+} else {
+  li.className = "other-message";
+}
+   li.innerHTML = `
+<div class="bubble">
+  <b>${data.from}</b><br>
+  ${data.message}
+  <div class="time">🕒 ${data.time}</div>
+</div>
+`;
+
+    messages.appendChild(li);
+  });
+
+  messages.scrollTop = messages.scrollHeight;
+});
+
+
+// Send Message
+form.onsubmit = (e) => {
+  e.preventDefault();
+
+  const receiver = userList.value;
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  if (receiver) {
+    socket.emit("private message", {
+      to: receiver,
+      message: message
+    });
+  } else {
+    socket.emit("chat message", message);
+  }
+
+  input.value = "";
+};// Receive Public Message
+socket.on("chat message", (data) => {
+  const li = document.createElement("li");
+if (data.from === username) {
+  li.className = "my-message";
+} else {
+  li.className = "other-message";
+}
+  const date = new Date();
+  const today =
+    date.getDate() + "/" +
+    (date.getMonth() + 1) + "/" +
+    date.getFullYear();
+
+ li.innerHTML = `
+<div class="bubble">
+  <b>${data.from}</b><br>
+  ${data.message}
+  <div class="time">🕒 ${data.time} | 📅 ${today}</div>
+</div>
+`;
+
+  messages.appendChild(li);
+  messages.scrollTop = messages.scrollHeight;
+});
+
+// Receive Private Message
+socket.on("private message", (data) => {
+  const li = document.createElement("li");
+if (data.from === username) {
+  li.className = "my-message";
+} else {
+  li.className = "other-message";
+}
+  const date = new Date();
+  const today =
+    date.getDate() + "/" +
+    (date.getMonth() + 1) + "/" +
+    date.getFullYear();
+
+  li.innerHTML = `
+<div class="bubble">
+  <b>🔒 ${data.from}</b><br>
+  ${data.message}
+  <div class="time">🕒 ${data.time || ""} | 📅 ${today}</div>
+</div>
+`;
+
+  messages.appendChild(li);
+  messages.scrollTop = messages.scrollHeight;
+});
+
+
+// Receive Public Message
+
+
+
+photoBtn.onclick = () => {
+  imageInput.click();
+};
+imageInput.onchange = () => {
+  const file = imageInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+ reader.onload = () => {
+  selectedImage = reader.result;
+  imagePreview.src = selectedImage;
+  imagePreview.style.display = "block";
+  sendImageBtn.style.display = "block";
+};
+
+    reader.readAsDataURL(file);
+  }
+};
+socket.on("image message", (data) => {
+  const li = document.createElement("li");
+
+  if (data.from === username) {
+    li.className = "my-message";
+  } else {
+    li.className = "other-message";
+  }
+
+  li.innerHTML = `
+    <div class="bubble">
+      <b>${data.from}</b><br>
+      <img src="${data.image}" style="max-width:200px;border-radius:10px;">
+    </div>
+  `;
+
+  messages.appendChild(li);
+  messages.scrollTop = messages.scrollHeight;
+});
+sendImageBtn.onclick = () => {
+  if (selectedImage) {
+    socket.emit("image message", {
+      image: selectedImage
+    });
+
+    imagePreview.style.display = "none";
+    sendImageBtn.style.display = "none";
+    selectedImage = "";
+   }
+};
+
+let mediaRecorder;
+let audioChunks = [];
+
+voiceBtn.onclick = async () => {
+  try {
+    if (!mediaRecorder || mediaRecorder.state === "inactive") {
+let stream;
+
+try {
+  stream = await navigator.mediaDevices.getUserMedia({
+    audio: true
+  });
+} catch (err) {
+  alert("Microphone Error: " + err.name + "\n" + err.message);
+  return;
+}
+
+      const options = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+    ? { mimeType: "audio/webm;codecs=opus" }
+    : {};
+
+mediaRecorder = new MediaRecorder(stream, options);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+       const audioBlob = new Blob(audioChunks, {
+  type: mediaRecorder.mimeType || "audio/webm"
+}); 
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          socket.emit("voice message", {
+            audio: reader.result
+          });
+        };
+
+        reader.readAsDataURL(audioBlob);
+      };
+
+      mediaRecorder.start();
+      voiceBtn.textContent = "⏹ Stop Voice";
+
+    } else {
+      mediaRecorder.stop();
+      voiceBtn.textContent = "🎤 Voice";
+    }
+
+  } catch (err) {
+    alert("Microphone Error: " + err.message);
+  }
+};
+
+
+socket.on("voice message", (data) => {
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  audio.src = data.audio;
+
+  const li = document.createElement("li");
+  li.textContent = data.from + ": ";
+  li.appendChild(audio);
+
+  messages.appendChild(li);
+});
