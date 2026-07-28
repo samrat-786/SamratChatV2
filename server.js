@@ -28,7 +28,7 @@ const msgId = Date.now();
   io.emit("chat message", {
   from: socket.username,
   message: message,
- time: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+ time: new Date().toLocaleString(),
   id: msgId
 });
 });
