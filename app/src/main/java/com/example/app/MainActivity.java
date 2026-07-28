@@ -50,6 +50,7 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE)
         if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
     WebSettingsCompat.setForceDark(
         webSettings,
