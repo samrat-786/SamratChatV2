@@ -20,7 +20,8 @@ io.on("connection", (socket) => {
 
     socket.emit("private message", {
       from: "System",
-      message: "আপনি লগইন করেছেন: " + name
+      message: "আপনি লগইন করেছেন: " + name,
+time: new Date().toLocaleString()
     });
   });
 socket.on("chat message", (message) => {
@@ -51,6 +52,7 @@ socket.on("voice message", (data) => {
       io.to(receiverId).emit("private message", {
         from: socket.username,
         message: data.message
+
       });
 
       socket.emit("private message", {
