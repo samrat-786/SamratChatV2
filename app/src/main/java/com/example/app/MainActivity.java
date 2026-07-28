@@ -95,9 +95,13 @@ public void onPermissionRequest(final PermissionRequest request) {
     // Use remote resource
 mWebView.setWebViewClient(new WebViewClient() {
 
-    @Override
-    public void onPageFinished(WebView view, String url) {
-    }
+   @Override
+public void onPageFinished(WebView view, String url) {
+    view.evaluateJavascript(
+        "localStorage.setItem('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);",
+        null
+    );
+}
 });
 
         // Stop local links and redirects from opening in browser instead of WebView
